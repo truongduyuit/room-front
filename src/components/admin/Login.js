@@ -1,22 +1,53 @@
 import React, { Component } from 'react';
 import '../../assets/css/sb-admin-2.min.css'
-import {Link} from 'react-router-dom'
-import axios from 'axios'
+import {Link, Redirect} from 'react-router-dom'
+import { connect } from 'react-redux'
+import {loginAction} from '../../actions/LoginActions'
+import { produce } from 'immer';
+import {withRouter } from 'react-router-dom';
+import axios from 'axios';
 
 class Login extends Component {
 
     constructor(props){
         super(props)
 
-        let loggedIn = false;
         this.state = {
             userName: '',
-            pass: '',
-            loggedIn
+            pass: ''
         }
-
-        this.LoginSubmit = this.LoginSubmit.bind(this);
     }
+
+    componentDidMount() {
+        console.log('hello')
+        this.validate()
+    }
+
+    validate = async () => {
+        const token = localStorage.getItem('token');
+
+        if(token) {
+            const validate = await axios({
+                url: `http://localhost:8001/user/validate?token=${token}`,
+                method: "POST",
+            })
+
+            if(validate) {
+                if(validate.data && validate.data.data) {
+                    this.setState({
+                        isLogin: true
+                    })
+                    this.props.history.push('/admin')
+                } else {
+                    this.props.history.push('/dang-nhap')
+                }
+
+            }
+        } else {
+            this.props.history.push('/dang-nhap')
+        }
+    }
+
 
     onChange(e){
         this.setState({
@@ -24,21 +55,39 @@ class Login extends Component {
         })
     }
 
-    LoginSubmit(e){
-        e.preventDefault();
-        console.log(this.state)
-        console.log("1")
+    onSubmit = () => {
+        console.log('ma')
+        this.Login()
+    }
 
-        axios.post("http://localhost:8001/user/login", this.state) // username, password
-            .then(response =>{
-                console.log(response);
-            })
-            .catch(error =>{
-                console.log(error);
-            })
+    Login = async () => {
+        const login = await axios({
+            url: 'http://localhost:8001/user/login',
+            method: 'POST',
+            data: {
+                userName: this.state.userName,
+                pass: this.state.pass
+            }
+        })
+
+        if(login) {
+            console.log(login)
+            if(login.data && login.data.data) {
+                const {token, user} = login.data.data;
+
+                localStorage.setItem('token', token);
+
+                this.props.loginAction({
+                    user
+                })
+            }
+        }
     }
 
     render() {
+        if (this.props.userLogin.username){
+            return <Redirect to = "/admin"/>
+        }
         return (
                 <div className="container">
                 {/* Outer Row */}
@@ -57,47 +106,37 @@ class Login extends Component {
                                 <h1 className="h4 text-gray-900 mb-4">Đăng nhập</h1>
                                 </div>
 
-                                <form className="user" onSubmit={this.LoginSubmit}>
-                                <div className="form-group">
-                                    <input type="text" 
-                                        className="form-control form-control-user" 
-                                        id="exampleInputEmail" 
-                                        name="userName" 
-                                        onChange = {(e) => this.onChange(e)}
-                                        value = {this.state.userName}
-                                        aria-describedby="emailHelp" 
-                                        placeholder="Nhập tài khoản..." 
-                                        />
-                                </div>
-                                <div className="form-group">
-                                    <input type="password" 
-                                        className="form-control form-control-user" 
-                                        id="exampleInputPassword" 
-                                        name= "pass"
-                                        onChange = {(e) => this.onChange(e)}
-                                        value = {this.state.pass}
-                                        placeholder="Nhập mật khẩu" />
-                                </div>
-                                <div className="form-group">
-                                    <div className="custom-control custom-checkbox small">
-                                    <input type="checkbox" className="custom-control-input" id="customCheck" />
-                                    <label className="custom-control-label" htmlFor="customCheck">Nhớ mật khẩu</label>
+                                <form className="user">
+                                    <div className="form-group">
+                                        <input type="text" 
+                                            className="form-control form-control-user" 
+                                            id="exampleInputEmail" 
+                                            name="userName" 
+                                            onChange = {(e) => this.onChange(e)}
+                                            value = {this.state.userName}
+                                            aria-describedby="emailHelp" 
+                                            placeholder="Nhập tài khoản..." 
+                                            />
                                     </div>
-                                </div>
-                                <input type="submit" className="btn btn-primary btn-user btn-block" value=" Đăng Nhập"/>
-                                   
-                                <hr />
-                                {/* <a href="index.html" className="btn btn-google btn-user btn-block">
-                                    <i className="fab fa-google fa-fw" /> Login with Google
-                                </a>
-                                <a href="index.html" className="btn btn-facebook btn-user btn-block">
-                                    <i className="fab fa-facebook-f fa-fw" /> Login with Facebook
-                                </a> */}
+                                    <div className="form-group">
+                                        <input type="password" 
+                                            className="form-control form-control-user" 
+                                            id="exampleInputPassword" 
+                                            name= "pass"
+                                            onChange = {(e) => this.onChange(e)}
+                                            value = {this.state.pass}
+                                            placeholder="Nhập mật khẩu" />
+                                    </div>
+                                    <div className="form-group">
+                                        <div className="custom-control custom-checkbox small">
+                                        <input type="checkbox" className="custom-control-input" id="customCheck" />
+                                        <label className="custom-control-label" htmlFor="customCheck">Nhớ mật khẩu</label>
+                                        </div>
+                                    </div>
+                                    <input type="button" onClick={this.onSubmit} className="btn btn-primary btn-user btn-block" value=" Đăng Nhập"/>                                  
+                                    <hr />
                                 </form>
                                 <hr />
-                                {/* <div className="text-center">
-                                <a className="small" href="forgot-password.html">Forgot Password?</a>
-                                </div> */}
                                 <div className="text-center">
                                     <Link className="small" to="/dang-ky">Đăng ký thành viên</Link>
                                 </div>
@@ -113,4 +152,14 @@ class Login extends Component {
     }
 }
 
-export default Login;
+const mapDispatchToProps =  {
+    loginAction
+}
+
+const mapStateToProps = (state) => {
+    return {
+        userLogin: state.LoginReducer.userLogin
+    }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
