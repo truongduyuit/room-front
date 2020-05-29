@@ -3,7 +3,7 @@ import '../../../assets/css/sb-admin-2.min.css'
 import '../../../assets/vendor/datatables/dataTables.bootstrap4.min.css'
 import SideBar from '../SideBar';
 import Topbar from '../Topbar';
-import RoomTable from './RoomTable';
+import BlockTable from './BlockTable';
 
 class Index extends Component {
 
@@ -49,7 +49,7 @@ class Index extends Component {
                         
                         {/* Begin Page Content */}
                         <div className="container-fluid">
-                            <RoomTable/>
+                            <BlockTable/>
                         </div>
                         {/* /.container-fluid */}
                     </div>

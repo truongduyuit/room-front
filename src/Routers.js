@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import Login from './components/admin/Login';
 import Register from './components/admin/Register';
 import IndexAdmin from './components/admin/IndexAdmin';
-import Room from './components/admin/room/Index'
+import Block from './components/admin/block/Index'
 
 class Routers extends Component {
     render() {
@@ -20,8 +20,8 @@ class Routers extends Component {
                 <Route exact path="/admin">
                     <IndexAdmin/>
                 </Route>
-                <Route exact path="/admin/phong">
-                    <Room/>
+                <Route exact path="/admin/khu-tro">
+                    <Block/>
                 </Route> 
             </Switch>
         );

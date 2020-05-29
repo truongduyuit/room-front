@@ -20,7 +20,7 @@ class SideBar extends Component {
             {/* Nav Item - Pages Collapse Menu */}
 
             <li className="nav-item">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/admin/khu-tro">
                 <i className="fas fa-fw fa-chart-area" />
                 <span>Khu trọ</span></a>
             </li>
