@@ -9,7 +9,7 @@ import {Form, FormGroup, Label, Input} from 'reactstrap';
 import {toast, ToastContainer} from 'react-toastify';
 import Spin from '../../admin/Spin';
 
-class RoomTable extends Component {
+class BlockTable extends Component {
 
     state = {
         blocks : [],
@@ -33,10 +33,10 @@ class RoomTable extends Component {
     }
 
     componentDidMount() {
-        this.getRooms();
+        this.getBlocks();
     }
 
-    getRooms = async () =>{
+    getBlocks = async () =>{
         this.setState({
             isLoading: true
         });
@@ -87,7 +87,7 @@ class RoomTable extends Component {
                 this.setState({
                     isOpenModal: !this.state.isOpenModal
                 });
-                this.getRooms();
+                this.getBlocks();
             } else {
 
                 toast.error('Thêm khu trọ thất bại !');
@@ -103,7 +103,7 @@ class RoomTable extends Component {
 
     callBackBlockRow = (value) =>{
         if (value) {
-            this.getRooms();
+            this.getBlocks();
         }
     }
 
@@ -195,4 +195,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RoomTable);
+export default connect(mapStateToProps, mapDispatchToProps)(BlockTable);
