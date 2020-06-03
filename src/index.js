@@ -8,6 +8,7 @@ import {store} from './reducers/RootReducer';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
+import 'antd/dist/antd.css';
 
 ReactDOM.render(
     <React.StrictMode>

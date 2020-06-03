@@ -4,7 +4,7 @@ import '../../../assets/vendor/datatables/dataTables.bootstrap4.min.css';
 import {connect} from 'react-redux';
 import SideBar from '../SideBar';
 import Topbar from '../Topbar';
-import RoomTable from './RoomTable';
+import ServiceTable from './ServiceTable';
 import LogoutModal from '../LogoutModal';
 import {FormGroup, Label, Input} from 'reactstrap';
 import {Container, Row, Col} from 'reactstrap';
@@ -16,7 +16,8 @@ class Index extends Component {
     state = {
         blocks: [],
         isLoading: false,
-        idBlockSelected: null
+        idBlockSelected: null,
+        block: null
     }
 
     componentDidMount() {
@@ -42,7 +43,8 @@ class Index extends Component {
                 this.setState({
                     blocks,
                     idBlockSelected: +blocks[0].id,
-                    isLoading: false
+                    isLoading: false,
+                    block: blocks[0]
                 });
             }
         }
@@ -74,7 +76,8 @@ class Index extends Component {
             const block = this.state.blocks.find(block => block.nameBlock === value);
 
             this.setState({
-                idBlockSelected: block.id
+                idBlockSelected: block.id,
+                block
             });
         }
     }
@@ -134,7 +137,7 @@ class Index extends Component {
                                         </Col>
                                     </Row>
                                 </Container>
-                                <RoomTable idBlock={this.state.idBlockSelected} />
+                                <ServiceTable idBlock={this.state.idBlockSelected} block= {this.state.block} />
                             </div>
                             {/* /.container-fluid */}
                         </div>

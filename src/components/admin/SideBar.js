@@ -31,14 +31,14 @@ class SideBar extends Component {
                         <span>Phòng</span></Link>
                 </li>
                 <li className="nav-item">
-                    <Link className="nav-link" to="charts.html">
+                    <Link className="nav-link" to="/admin/dich-vu">
                         <i className="fas fa-fw fa-chart-area" />
                         <span>Dịch vụ</span></Link>
                 </li>
                 <li className="nav-item">
-                    <Link className="nav-link" to="charts.html">
+                    <Link className="nav-link" to="/admin/khach-hang">
                         <i className="fas fa-fw fa-chart-area" />
-                        <span>Hợp đồng</span></Link>
+                        <span>Khách hàng</span></Link>
                 </li>
                 <li className="nav-item">
                     <Link className="nav-link" to="charts.html">

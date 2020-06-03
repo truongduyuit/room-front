@@ -5,6 +5,8 @@ import Register from './components/admin/Register';
 import IndexAdmin from './components/admin/IndexAdmin';
 import Block from './components/admin/block/Index';
 import Room from './components/admin/room/index';
+import Service from './components/admin/service/Index';
+import Customer from './components/admin/customer/Index';
 
 class Routers extends Component {
     render() {
@@ -19,6 +21,10 @@ class Routers extends Component {
                 <Route exact path="/admin/khu-tro"> <Block /> </Route> 
 
                 <Route exact path="/admin/phong"> <Room /> </Route>
+
+                <Route exact path="/admin/dich-vu"> <Service /> </Route>
+
+                <Route exact path="/admin/khach-hang"> <Customer /> </Route>
                 
             </Switch>
         );

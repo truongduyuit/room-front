@@ -4,19 +4,18 @@ import {toast, ToastContainer} from 'react-toastify';
 import Spin from '../../admin/Spin';
 import axios from 'axios';
 
-export default class RoomRow extends Component {
+export default class ServiceRow extends Component {
 
     state = {
         isOpenModal: false,
         isOpenModalDelete: false,
         isLoading: false,
-        nameRoom: '',
-        maxPeople: null,
-        floor : null,
-        square: null,
+        nameService: '',
         price: null,
         description: '',
-        status: ''
+        nameUnit: '',
+        selectIdUnit: null,
+        units: []
     }
 
     onChange(e) {
@@ -31,17 +30,54 @@ export default class RoomRow extends Component {
         });
     }
 
+    onGetUnit = async () =>{
+        this.setState({
+            isLoading: true
+        });
+
+        let token = localStorage.getItem('token');
+
+        const result = await axios({
+            url: `http://localhost:8001/unit/get-units?token=${token || ''}`,
+            method: 'GET'
+        });
+
+        this.setState({
+            isLoading: false
+        });
+        if (result) {
+            if (result.data && result.data.data) {
+                this.setState({
+                    units : result.data.data.units
+                });
+            } 
+        } 
+    }
+
+    onChangeSelected = (e) => {
+        const {value} = e.target;
+
+        if (value) {
+            const unit = this.state.units.find(unit => unit.name === value);
+
+            this.setState({
+                selectIdUnit: unit.id,
+                nameUnit: value
+            });
+        }
+    }
+
     onClickEdit = () => {
+        this.onGetUnit();
         this.setState({
             isOpenModal: true,
-            nameRoom: this.props.room.nameRoom,
-            maxPeople: this.props.room.maxPeople,
-            floor : this.props.room.floor,
-            square: this.props.room.square,
-            price: this.props.room.price,
-            description: this.props.room.description,
-            status: this.props.room.status
+            nameService: this.props.service.nameService,
+            price: this.props.service.price,
+            idUnit : this.props.service.idUnit,
+            description: this.props.service.description,
+            nameUnit: this.props.service.nameUnit
         });
+
     }
 
     onEditing= async () =>{
@@ -52,17 +88,12 @@ export default class RoomRow extends Component {
         let token = localStorage.getItem('token');
 
         const result = await axios({
-            url: `http://localhost:8001/room/update/${this.props.room.id}?token=${token || ''}`,
+            url: `http://localhost:8001/service/update/${this.props.service.id}?token=${token || ''}`,
             method: 'PUT',
             data: {
-                nameRoom: this.state.nameRoom,
-                maxPeople: +this.state.maxPeople,
-                floor: +this.state.floor,
-                square: +this.state.square,
+                description: this.state.description,               
                 price: +this.state.price,
-                description: this.state.description,
-                idBlock: this.props.room.idBlock,
-                status: this.props.room.status
+                idUnit: +this.state.selectIdUnit
             }
         });
 
@@ -71,7 +102,7 @@ export default class RoomRow extends Component {
         });
         if (result) {
             if (result.data && result.data.data) {
-                toast.success('Chỉnh sửa thông tin phòng thành công !');
+                toast.success('Chỉnh sửa dịch vụ thành công !');
 
                 this.setState({
                     isOpenModal: !this.state.isOpenModal
@@ -79,7 +110,7 @@ export default class RoomRow extends Component {
                 this.props.callback(true);
             } else {
 
-                toast.error('Chỉnh sửa thông tin phòng thất bại !');
+                toast.error('Chỉnh sửa dịch vụ thất bại !');
             }
         } 
     }
@@ -103,22 +134,21 @@ export default class RoomRow extends Component {
 
         let token = localStorage.getItem('token');
         const result = await axios({
-            url: `http://localhost:8001/room/delete/${this.props.room.id}?token=${token || ''}`,
+            url: `http://localhost:8001/service/delete/${this.props.service.id}?token=${token || ''}`,
             method: 'DELETE'
         });
 
         if (result) {
             if (result.data && result.data.data) {
-                this.setState({
-                    isOpenDeleteModal: !this.state.isOpenDeleteModal
-                });
-                toast.success('Xóa phòng thành công !');
+                toast.success('Xóa dịch vụ thành công !');
                
+                this.setState({isOpenModalDelete: false});
+                
                 this.props.callback(true);
     
             } else {
 
-                toast.error('Xóa phòng thất bại !');
+                toast.error('Xóa dịch vụ thất bại !');
             }
         } 
 
@@ -127,17 +157,35 @@ export default class RoomRow extends Component {
         });
     }
 
+    onClickUnit = id =>{
+        this.setState({
+            selectIdUnit : +id
+        });
+    }
+
+    renderUnits = () =>{
+
+        if (Array.isArray(this.state.units) && this.state.units.length > 0) {
+            return this.state.units.map(unit => {
+                return <React.Fragment key={unit.id}>
+                    <option 
+                        onClick={() => this.onClickUnit(unit.id)}   
+                        // value = {this.state.nameUnit}                   
+                    >{unit.name}
+                    </option>
+                </React.Fragment>;
+            });
+        }
+    }
+
     render() {
         return (
             <React.Fragment>
                 <tr>
-                    <td>{this.props.room.nameRoom}</td>
-                    <td>{this.props.room.floor}</td>
-                    <td>{this.props.room.square}</td>
-                    <td>{this.props.room.maxPeople}</td>
-                    <td>{this.props.room.price}</td>
-                    <td>{this.props.room.description}</td>
-                    <td>{this.props.room.status === 0 ? 'Còn trống' : 'Đã thuê'}</td>
+                    <td>{this.props.service.nameService}</td>
+                    <td>{this.props.service.price}</td>
+                    <td>{this.props.service.nameUnit}</td>
+                    <td>{this.props.service.description}</td>
                     <td>
                         <button onClick={this.onClickEdit} className="btn btn-warning btn-circle mr-3" title="Chỉnh sửa">
                             <i className="fa fa-pencil-square" aria-hidden="true" />
@@ -149,30 +197,26 @@ export default class RoomRow extends Component {
                 </tr>
                 <Modal isOpen={this.state.isOpenModal} toggle={this.toggle}>
                     {this.state.isLoading ?  <Spin /> : null}       
-                    <ModalHeader toggle={this.toggle}>THÊM PHÒNG</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>CHỈNH SỬA DỊCH VỤ</ModalHeader>
                     <ModalBody>
                         <Form>
                             <FormGroup>
-                                <Label for="nameRoom">Tên phòng (*)</Label>
-                                <Input type="text" name="nameRoom" id="nameRoom" onChange={(e) => this.onChange(e)} value={this.state.nameRoom} />
-                                <Label for="floor">Tầng (*) </Label>
-                                <Input type="number" name="floor" id="floor" onChange={(e) => this.onChange(e)} value={this.state.floor} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="maxPeople">Số người tối da (*) </Label>
-                                <Input type="number" name="maxPeople" id="maxPeople" onChange={(e) => this.onChange(e)} value={this.state.maxPeople} />
-                                <Label for="square">Diện tích (*) </Label>
-                                <Input type="number" name="square" id="square" onChange={(e) => this.onChange(e)} value={this.state.square} />
-                                <Label for="price">Giá (*)</Label>
-                                <Input type="number" name="price" id="price" onChange={(e) => this.onChange(e)} value={this.state.price} />
+                                <Label for="nameBlock">Tên phòng khu trọ/ căn hộ: </Label>
+                                <Input type="text" name="nameBlock" id="nameBlock" disabled value={this.props.block.nameBlock} />
+                                <Label for="nameService">Tên dịch vụ: </Label>
+                                <Input type="text" name="nameService" id="nameService" disabled onChange={(e) => this.onChange(e)} value={this.state.nameService} />
                             </FormGroup>
                             <FormGroup>
                                 <Label for="description">Mô tả</Label>
                                 <Input type="textarea" name="description" id="description" onChange={(e) => this.onChange(e)} value={this.state.description} />
+                                <Label for="price">Đơn giá (*) </Label>
+                                <Input type="number" name="price" id="price" onChange={(e) => this.onChange(e)} value={this.state.price} />                  
                             </FormGroup>
                             <FormGroup>
-                                <Label for="exampleFile">File</Label>
-                                <Input type="file" name="file" id="exampleFile" />
+                                <Label for="exampleSelect">Đơn vị</Label>
+                                <Input onChange={this.onChangeSelected} type="select" name="select" value={this.state.nameUnit} id="exampleSelect">
+                                    {this.renderUnits()}
+                                </Input>
                             </FormGroup>
                         </Form>
                     </ModalBody>
@@ -185,7 +229,7 @@ export default class RoomRow extends Component {
                     {this.state.isLoading ?  <Spin /> : null}  
                     <ModalHeader toggle={this.toggleDelete}>THÔNG BÁO</ModalHeader>
                     <ModalBody>
-                        Chắc chắn muốn xóa phòng {this.props.room.nameRoom} ?
+                        Chắc chắn muốn xóa dịch vụ {this.props.service.nameService} ?
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" onClick={this.onDeleting}>Xóa</Button>{' '}

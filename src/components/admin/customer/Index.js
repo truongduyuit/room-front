@@ -1,22 +1,22 @@
 import React, {Component} from 'react';
-import '../../../assets/css/sb-admin-2.min.css';
-import '../../../assets/vendor/datatables/dataTables.bootstrap4.min.css';
-import {connect} from 'react-redux';
+
 import SideBar from '../SideBar';
 import Topbar from '../Topbar';
-import RoomTable from './RoomTable';
-import LogoutModal from '../LogoutModal';
-import {FormGroup, Label, Input} from 'reactstrap';
-import {Container, Row, Col} from 'reactstrap';
-import axios from 'axios';
 import Spin from '../../admin/Spin';
+import CustomerTable from './CustomerTable';
+import LogoutModal from '../LogoutModal';
 
-class Index extends Component {
+import axios from 'axios';
+import {Container, Row, Col} from 'reactstrap';
+import {FormGroup, Label, Input} from 'reactstrap';
+
+export default class Index extends Component {
 
     state = {
         blocks: [],
         isLoading: false,
-        idBlockSelected: null
+        idBlockSelected: null,
+        block: null
     }
 
     componentDidMount() {
@@ -41,29 +41,11 @@ class Index extends Component {
 
                 this.setState({
                     blocks,
-                    idBlockSelected: +blocks[0].id,
-                    isLoading: false
+                    idBlockSelected: blocks[0].id,
+                    isLoading: false,
+                    block: blocks[0]
                 });
             }
-        }
-    }
-
-    onClickBlock = (id) => {
-        if (id) {
-            this.setState({
-                idBlockSelected: +id
-            });
-        }
-    }
-    
-    renderSelectBlock = () =>{
-
-        if (Array.isArray(this.state.blocks) && this.state.blocks.length > 0) {
-            return this.state.blocks.map(block => {
-                return <React.Fragment key={block.id}>
-                    <option onClick={() => this.onClickBlock(block.id)}>{block.nameBlock}</option>
-                </React.Fragment>;
-            });
         }
     }
 
@@ -74,7 +56,19 @@ class Index extends Component {
             const block = this.state.blocks.find(block => block.nameBlock === value);
 
             this.setState({
-                idBlockSelected: block.id
+                idBlockSelected: +block.id,
+                block
+            });
+        }
+    }
+
+    renderSelectBlock = () =>{
+
+        if (Array.isArray(this.state.blocks) && this.state.blocks.length > 0) {
+            return this.state.blocks.map(block => {
+                return <React.Fragment key={block.id}>
+                    <option onClick={() => this.onClickBlock(block.id)}>{block.nameBlock}</option>
+                </React.Fragment>;
             });
         }
     }
@@ -134,7 +128,7 @@ class Index extends Component {
                                         </Col>
                                     </Row>
                                 </Container>
-                                <RoomTable idBlock={this.state.idBlockSelected} />
+                                <CustomerTable block = {this.state.block} />
                             </div>
                             {/* /.container-fluid */}
                         </div>
@@ -163,11 +157,3 @@ class Index extends Component {
         );
     }
 }
-
-const mapStateToProps = state=> {
-    return {
-        blocksState: state.BlockReducer.blocks
-    };
-};
-
-export default connect(mapStateToProps, null)(Index);
