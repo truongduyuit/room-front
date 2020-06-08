@@ -56,6 +56,7 @@ class BlockTable extends Component {
         this.props.GET_BLOCKS({
             blocks: blocks.data.data.blocks
         });
+
     }
 
     onAdding = async () =>{
