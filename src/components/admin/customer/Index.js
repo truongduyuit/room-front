@@ -128,7 +128,7 @@ export default class Index extends Component {
                                         </Col>
                                     </Row>
                                 </Container>
-                                <CustomerTable block = {this.state.block} />
+                                <CustomerTable idBlock={this.state.idBlockSelected} block= {this.state.block} />
                             </div>
                             {/* /.container-fluid */}
                         </div>

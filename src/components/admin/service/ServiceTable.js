@@ -134,7 +134,8 @@ class ServiceTable extends Component {
         });
     }
 
-    callBackBlockRow = (value) =>{
+    callBackServiceRow = (value) =>{
+        console.log(value);
         if (value) {
             this.getServices();
         }
@@ -154,7 +155,7 @@ class ServiceTable extends Component {
                 return <React.Fragment key={service.id}>
                     <ServiceRow 
                         service={service}
-                        callback = {this.callBackRoomRow}
+                        callback = {this.callBackServiceRow}
                         block= {this.props.block}
                     />
                 </React.Fragment>;

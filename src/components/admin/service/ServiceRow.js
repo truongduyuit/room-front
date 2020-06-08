@@ -93,7 +93,8 @@ export default class ServiceRow extends Component {
             data: {
                 description: this.state.description,               
                 price: +this.state.price,
-                idUnit: +this.state.selectIdUnit
+                idUnit: +this.state.idUnit,
+                id : +this.props.service.id
             }
         });
 
