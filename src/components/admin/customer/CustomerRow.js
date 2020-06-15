@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Form, Input, Radio , Button, Checkbox, Row, Col, Divider, DatePicker, Upload, message} from 'antd';
+import {Form, Input, Radio , Button, Checkbox, Row, Col, Divider, DatePicker, Tag, message} from 'antd';
 import {Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import axios from 'axios';
 import Spin from '../../admin/Spin';
@@ -145,13 +145,15 @@ export default class CustomerRow extends Component {
     }
 
     render() {
+        const {customer} = this.props;
+
         return (
             <React.Fragment>
                 <tr>
-                    <td>{this.props.customer.fullName}</td>
-                    <td>{this.props.customer.phoneNumber}</td>
-                    <td>{this.props.customer.status === 1 ? 'Đã thuê' : 'Chưa thuê'}</td>
-                    <td>{this.props.customer.roomName}</td>
+                    <td>{customer.fullName}</td>
+                    <td>{customer.phoneNumber}</td>
+                    <td>{customer.rooms && customer.rooms.length == 0 ? <Tag color="green">Chưa thuê</Tag> : <Tag color="orange">Đã thuê</Tag>}</td>
+                    <td>{customer.rooms ? customer.rooms[0].roomName : ''}</td>
                     <td>
                         <button onClick={this.onClickEdit} className="btn btn-warning btn-circle mr-3" title="Chỉnh sửa">
                             <i className="fa fa-pencil-square" aria-hidden="true" />

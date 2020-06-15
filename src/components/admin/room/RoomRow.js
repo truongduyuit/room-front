@@ -3,6 +3,7 @@ import {Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Lab
 import {toast, ToastContainer} from 'react-toastify';
 import Spin from '../../admin/Spin';
 import axios from 'axios';
+import {Tag} from 'antd'; 
 
 export default class RoomRow extends Component {
 
@@ -131,13 +132,15 @@ export default class RoomRow extends Component {
         return (
             <React.Fragment>
                 <tr>
-                    <td>{this.props.room.nameRoom}</td>
+                    <td><Tag color="geekblue">{this.props.room.nameRoom}</Tag></td>
                     <td>{this.props.room.floor}</td>
                     <td>{this.props.room.square}</td>
                     <td>{this.props.room.maxPeople}</td>
                     <td>{this.props.room.price}</td>
                     <td>{this.props.room.description}</td>
-                    <td>{this.props.room.status === 0 ? 'Còn trống' : 'Đã thuê'}</td>
+                    <td>{
+                        this.props.room.status === 0 ? 
+                            <Tag color="green">Còn trống</Tag> : <Tag color="orange">Đã thuê</Tag>}</td>
                     <td>
                         <button onClick={this.onClickEdit} className="btn btn-warning btn-circle mr-3" title="Chỉnh sửa">
                             <i className="fa fa-pencil-square" aria-hidden="true" />

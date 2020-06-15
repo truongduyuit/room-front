@@ -41,9 +41,9 @@ class SideBar extends Component {
                         <span>Khách hàng</span></Link>
                 </li>
                 <li className="nav-item">
-                    <Link className="nav-link" to="charts.html">
+                    <Link className="nav-link" to="/admin/hop-dong">
                         <i className="fas fa-fw fa-chart-area" />
-                        <span>Hóa đơn</span></Link>
+                        <span>Hợp đồng</span></Link>
                 </li>
             </ul>
         );

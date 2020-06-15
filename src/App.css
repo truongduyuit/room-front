@@ -47,3 +47,8 @@
     justify-content: center;
     background: rgba(253, 253, 253, 0.534);
 }
+
+.modal-contract {
+  max-width: 600px !important;
+  width: 600px;
+}

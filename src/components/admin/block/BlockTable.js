@@ -83,12 +83,13 @@ class BlockTable extends Component {
         });
         if (result) {
             if (result.data && result.data.data) {
+                this.getBlocks();
                 toast.success('Thêm khu trọ thành công !');
 
                 this.setState({
                     isOpenModal: !this.state.isOpenModal
                 });
-                this.getBlocks();
+                
             } else {
 
                 toast.error('Thêm khu trọ thất bại !');

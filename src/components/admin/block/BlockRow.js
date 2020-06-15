@@ -4,6 +4,7 @@ import {Form, FormGroup, Label, Input} from 'reactstrap';
 import axios from 'axios';
 import {toast, ToastContainer} from 'react-toastify';
 import Spin from '../../admin/Spin';
+import {Tag} from 'antd'; 
 
 export default class BlockRow extends Component {
     state = {
@@ -128,7 +129,7 @@ export default class BlockRow extends Component {
         return (
             <React.Fragment>
                 <tr>
-                    <td>{this.props.block.nameBlock}</td>
+                    <td><Tag color="#f50">{this.props.block.nameBlock}</Tag></td>
                     <td>{this.props.block.address}</td>
                     <td>{this.props.block.description}</td>
                     <td>
