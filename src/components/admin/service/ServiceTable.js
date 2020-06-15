@@ -2,10 +2,9 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {connect} from 'react-redux';
-import {Modal, ModalHeader, ModalBody, ModalFooter, FormGroup, Label} from 'reactstrap';
+import {Modal, ModalHeader, ModalBody} from 'reactstrap';
 import {toast, ToastContainer} from 'react-toastify';
-import {Form, Input, InputNumber, Button, Checkbox, Row, Col, Divider, message} from 'antd';
-import {FormInstance} from 'antd/lib/form';
+import {Form, Button, Checkbox, Row, Col, Divider} from 'antd';
 
 // Actions
 import {GET_ROOMS} from '../../../actions/RoomAction';
@@ -135,7 +134,6 @@ class ServiceTable extends Component {
     }
 
     callBackServiceRow = (value) =>{
-        console.log(value);
         if (value) {
             this.getServices();
         }
@@ -302,6 +300,7 @@ class ServiceTable extends Component {
                 </Modal>
                 <ToastContainer />
             </div>
+        
         );
     }
 }
