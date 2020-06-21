@@ -15,11 +15,6 @@ class Topbar extends Component {
         });
     }
 
-    Logout = () =>{
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-    }
-
     render() {
         return (
             <React.Fragment>
@@ -129,9 +124,8 @@ class Topbar extends Component {
                     </a>
                     {/* Dropdown - User Information */}
                     <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <div className="dropdown-divider" />
-                        <button className="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal" onClick={this.Logout} >
-                        Đăng xuất
+                        <button className="dropdown-item" data-toggle="modal" data-target="#logoutModal" >
+                            Đăng xuất
                         </button>
                     </div>
                 </li>

@@ -76,7 +76,7 @@ export default class ContractTable extends Component {
             this.getContracts();
             this.getRooms();      
         }
-        if (!_.isEqual(this.props.customers, prevProps.customers)) {
+        if (!_.isEqual(this.props.customers, prevProps.customers) && this.props.customers) {
             const newCustomers = this.props.customers.map(customer => ({
                 ...customer,
                 key: customer.id

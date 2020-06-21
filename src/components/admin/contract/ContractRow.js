@@ -230,8 +230,7 @@ export default class ContractRow extends Component {
                 this.setState({
                     isOpenModal: !this.state.isOpenModal
                 });
-                
-                console.log(update);
+            
                 this.props.callback(true);
             } else {
                 toast.error('Cập nhật hợp đồng thất bại !');
