@@ -326,6 +326,8 @@ export default class ContractTable extends Component {
     }
 
     render() {
+        const {idBlock} = this.props;
+
         return (
             <div style={{position: 'relative'}}>   
                 {this.state.isLoadingForm ?  <Spin /> : null}       
@@ -335,7 +337,12 @@ export default class ContractTable extends Component {
                             <h6 className="m-0 font-weight-bold text-primary">QUẢN LÝ DANH SÁCH HỢP ĐỒNG</h6>                          
                         </div>
                         <div>
-                            <Button outline color="primary" onClick = {this.addContractModal}>Thêm hợp đồng</Button>{' '}                                 
+                            <Button 
+                                outline color= {idBlock === null ? 'secondary' : 'primary' }
+                                disabled={idBlock === null ? true : false}
+                                title = {idBlock === null ? 'Phải có ít nhất 1 khu trọ để thực hiện thêm khách hàng' : ''}
+                                onClick = {this.addContractModal}
+                            >Thêm hợp đồng</Button>{' '}                                 
                         </div>
                                    
                     </div>

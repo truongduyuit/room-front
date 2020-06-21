@@ -9,6 +9,7 @@ import LogoutModal from '../LogoutModal';
 import axios from 'axios';
 import {Container, Row, Col} from 'reactstrap';
 import {FormGroup, Label, Input} from 'reactstrap';
+import {Link} from 'react-router-dom';
 
 export default class Index extends Component {
 
@@ -98,9 +99,9 @@ export default class Index extends Component {
                                 <ul className="navbar-nav ml-auto">
                                     {/* Nav Item - Search Dropdown (Visible Only XS) */}
                                     <li className="nav-item dropdown no-arrow d-sm-none">
-                                        <a className="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <Link className="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i className="fas fa-search fa-fw" />
-                                        </a>
+                                        </Link>
                                         {/* Dropdown - Messages */}
                                         <div className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
                                             <form className="form-inline mr-auto w-100 navbar-search">

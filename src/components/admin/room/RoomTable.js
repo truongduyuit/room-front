@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {connect} from 'react-redux';
-import {Button} from 'reactstrap';
+import {Button} from 'antd';
 import {Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input} from 'reactstrap';
 import {toast, ToastContainer} from 'react-toastify';
 
@@ -153,6 +153,8 @@ class RoomTable extends Component {
     }
 
     render() {
+        const {idBlock} = this.props;
+
         return (
             <div style={{position: 'relative'}}>   
                 {this.state.isLoading ?  <Spin /> : null}       
@@ -162,7 +164,12 @@ class RoomTable extends Component {
                             <h6 className="m-0 font-weight-bold text-primary">QUẢN LÝ DANH SÁCH PHÒNG</h6>                          
                         </div>
                         <div>
-                            <Button outline color="primary" onClick = {this.addBlockModal}>Thêm phòng</Button>{' '}                                 
+                            <Button 
+                                outline color= {idBlock === null ? 'secondary' : 'primary' }
+                                onClick = {this.addBlockModal}
+                                disabled={idBlock === null ? true : false}
+                                title = {idBlock === null ? 'Phải có ít nhất 1 khu trọ để thực hiện thêm phòng' : ''}
+                            >Thêm phòng</Button>{' '}                                 
                         </div>
                                    
                     </div>

@@ -23,6 +23,7 @@ class IndexAdmin extends Component {
         block: null,
         rooms: [],
         notRented: [],
+        valueSearch: '',
         rented: [],
         roomSelected: null
     }
@@ -176,22 +177,24 @@ class IndexAdmin extends Component {
         if (Array.isArray(notRented) && notRented.length > 0) {
             
             return notRented.map(room => {
-                return <React.Fragment key={room.id}>                   
-                    <Card title= {room.nameRoom}
-                        onClick = {(e) =>this.showDetailRoomDashboard(e, room)}
-                        room = {room}
-                        style={{width: 175, 
-                            height: 150, 
-                            backgroundColor: 'rgb(19, 194, 194)', 
-                            color: '#fff',
-                            cursor: 'pointer',
-                            borderRadius : '5%',
-                            marginRight: '10px',
-                            marginTop: '20px'}}>
-                        <p><i className="fa fa-user" aria-hidden="true" /> {room.maxPeople}</p>
-                        <p><i className="fa fa-usd" aria-hidden="true" /> {room.price}</p>
-                    </Card>
-                </React.Fragment>;
+                if (room.nameRoom.toLowerCase().indexOf(this.state.valueSearch.toLocaleLowerCase()) > -1) {
+                    return <React.Fragment key={room.id}>                   
+                        <Card title= {room.nameRoom}
+                            onClick = {(e) =>this.showDetailRoomDashboard(e, room)}
+                            room = {room}
+                            style={{width: 175, 
+                                height: 150, 
+                                backgroundColor: 'rgb(19, 194, 194)', 
+                                color: '#fff',
+                                cursor: 'pointer',
+                                borderRadius : '5%',
+                                marginRight: '10px',
+                                marginTop: '20px'}}>
+                            <p><i className="fa fa-user" aria-hidden="true" /> {room.maxPeople}</p>
+                            <p><i className="fa fa-usd" aria-hidden="true" /> {room.price}</p>
+                        </Card>
+                    </React.Fragment>;
+                }
             });
         }
     }
@@ -203,22 +206,24 @@ class IndexAdmin extends Component {
         if (Array.isArray(rented) && rented.length > 0) {
             
             return rented.map(room => {
-                return <React.Fragment key={room.id}>                   
-                    <Card title= {room.nameRoom}
-                        room = {room}
-                        onClick = {(e) =>this.showDetailRoomDashboard(e, room)}
-                        style={{width: 175, 
-                            height: 150, 
-                            backgroundColor: 'rgb(245, 34, 45)', 
-                            color: '#fff',
-                            cursor: 'pointer',
-                            borderRadius : '5%',
-                            marginRight: '10px',
-                            marginTop: '20px'}}>
-                        <p><i className="fa fa-user" aria-hidden="true" /> {room.maxPeople}</p>
-                        <p><i className="fa fa-usd" aria-hidden="true" /> {room.price}</p>
-                    </Card>
-                </React.Fragment>;
+                if (room.nameRoom.toLowerCase().indexOf(this.state.valueSearch.toLocaleLowerCase()) > -1) {
+                    return <React.Fragment key={room.id}>                   
+                        <Card title= {room.nameRoom}
+                            room = {room}
+                            onClick = {(e) =>this.showDetailRoomDashboard(e, room)}
+                            style={{width: 175, 
+                                height: 150, 
+                                backgroundColor: 'rgb(245, 34, 45)', 
+                                color: '#fff',
+                                cursor: 'pointer',
+                                borderRadius : '5%',
+                                marginRight: '10px',
+                                marginTop: '20px'}}>
+                            <p><i className="fa fa-user" aria-hidden="true" /> {room.maxPeople}</p>
+                            <p><i className="fa fa-usd" aria-hidden="true" /> {room.price}</p>
+                        </Card>
+                    </React.Fragment>;
+                }
             });
         }
     }
@@ -235,6 +240,14 @@ class IndexAdmin extends Component {
     handleCancel = () =>{
         this.setState({
             showDetail : false
+        });
+    }
+
+    onChangeValueSearch = (event) => {
+        const {value = ''} = event.target;
+
+        this.setState({
+            valueSearch: value
         });
     }
 
@@ -304,7 +317,7 @@ class IndexAdmin extends Component {
                                                 <FormGroup>
                                                     <Label for="exampleSelect">Tìm kiếm theo tên</Label>
                                                     <Input 
-                                                        onChange={this.onChange} 
+                                                        onChange={this.onChangeValueSearch} 
                                                         type="text" name="roomName" id="roomName" 
                                                         placeholder = "Nhập từ khóa"
                                                         style={{width: '300px'}} />
@@ -321,13 +334,10 @@ class IndexAdmin extends Component {
                                     {this.renderRoomNotRented()} 
                                     {this.state.rented.length > 0 ?  <div className="col-12 mt-5">Đã thuê: </div> : null}                                       
                                     {this.renderRoomRented()}
-                                    {this.state.notRented.length === 0 && this.state.rented.length === 0 ?  'Khu trọ chưa có phòng nào !' : null}  
+                                    {this.state.blocks.length < 1 ? 'Chưa có khu trọ nào' : this.state.notRented.length === 0 && this.state.rented.length === 0 &&  'Khu trọ chưa có phòng nào !'}
+                                    {/* {this.state.notRented.length === 0 && this.state.rented.length === 0 &&  'Khu trọ chưa có phòng nào !'}   */}
                                 </div>
 
-                                <div className="container-fluid">
-                                    
-                                    {/* <ServiceTable idBlock={this.state.idBlockSelected} block= {this.state.block} /> */}
-                                </div>
                             </div>
                             {/* /.container-fluid */}
                         </div>
