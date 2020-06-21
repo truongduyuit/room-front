@@ -8,11 +8,15 @@ import Room from './components/admin/room/index';
 import Service from './components/admin/service/Index';
 import Customer from './components/admin/customer/Index';
 import Contract from './components/admin/contract/Index';
+import Home from './components/web/Index';
 
 class Routers extends Component {
     render() {
         return (
             <Switch>
+
+                <Route exact path="/"> <Home /> </Route>
+
                 <Route exact path="/dang-nhap"> <Login /> </Route>
 
                 <Route exact path="/dang-ky">  <Register /> </Route>

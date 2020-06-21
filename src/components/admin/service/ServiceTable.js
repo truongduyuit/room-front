@@ -122,7 +122,6 @@ class ServiceTable extends Component {
                 });
             } 
         }
-
         this.setState({isLoading: false});
     }
 
@@ -163,11 +162,15 @@ class ServiceTable extends Component {
 
     renderDefaultServices = () => {
         const newServices = this.state.defaultServices.filter(service => {
-            if (!this.state.services.some(bservice => bservice.nameService === service.nameService)) {
-                return service;
+            if (this.state.services)
+            {
+                if (!this.state.services.some(bservice => bservice.nameService === service.nameService)) {
+                    return service;
+                }
             }
         });
 
+        console.log(this.state.services);
         return <Checkbox.Group style={{width: '100%'}}>
             <Row>
                 {

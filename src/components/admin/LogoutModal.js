@@ -1,6 +1,13 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 
 export default class LogoutModal extends Component {
+
+    logOut = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+    }
+
     render() {
         return (
             <div className="modal fade" id="logoutModal" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -15,7 +22,7 @@ export default class LogoutModal extends Component {
                         <div className="modal-body">Đăng suất để thoái khỏi phiên làm việc</div>
                         <div className="modal-footer">
                             <button className="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                            <a className="btn btn-primary" href="login.html">Đăng suất</a>
+                            <Link onClick={this.logOut} className="btn btn-primary" to="/dang-nhap">Đăng suất</Link>
                         </div>
                     </div>
                 </div>

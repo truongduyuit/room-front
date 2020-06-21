@@ -6,14 +6,143 @@ import SideBar from './SideBar';
 import Topbar from './Topbar';
 import {withRouter} from 'react-router-dom';
 import axios from 'axios';
+import LogOutModal from './LogoutModal';
+import Spin from './Spin';
+import {FormGroup, Label, Input} from 'reactstrap';
+import {Container, Row, Col} from 'reactstrap';
+import {Card, Modal, Button} from 'antd';
+import moment from 'moment';
 
 class IndexAdmin extends Component {
     state = {
-        isLogin: false
+        isLogin: false,
+        showDetail: false,
+        blocks: [],
+        isLoading: false,
+        idBlockSelected: -1,
+        block: null,
+        rooms: [],
+        notRented: [],
+        rented: [],
+        roomSelected: null
     }
 
     componentDidMount() {
         this.validate();
+        this.getBlocks();
+        this.getRoomDashBoard(this.state.idBlockSelected);
+    }
+
+    getBlocks = async () =>{
+        this.setState({
+            isLoading: true
+        });
+
+        let user = JSON.parse(localStorage.getItem('user'));
+        let token = localStorage.getItem('token');
+        const getBlocks = await axios({
+            url: `http://localhost:8001/block/get-block?token=${token || ''}&userId=${user ? user.id : ''}`,
+            method: 'GET'
+        });
+        
+        if (getBlocks) {
+            if (getBlocks.data && getBlocks.data.data) {
+                const {blocks = []} = getBlocks.data.data;
+                
+                if (blocks.length > 0) {
+                    this.setState({
+                        blocks,
+                        idBlockSelected: +blocks[0].id,
+                        isLoading: false,
+                        block: blocks[0]
+                    });
+                }
+
+            }
+        }
+
+        this.setState({
+            isLoading: false
+        });
+    }
+
+    getRoomDashBoard = async(id) =>{
+        this.setState({
+            isLoading: true
+        });
+
+        this.setState({
+            rented : [],
+            notRented :[]
+        });
+
+        let user = JSON.parse(localStorage.getItem('user'));
+        let token = localStorage.getItem('token');
+        const getRooms = await axios({
+            url: `http://localhost:8001/room/get-rooms-dashboard?status=${-1}&idBlock=${id}&token=${token || ''}&userId=${user ? user.id : ''}`,
+            method: 'GET'
+        });
+        
+        if (getRooms) {
+            if (getRooms.data && getRooms.data.data) {
+                const {rooms = []} = getRooms.data.data;
+
+                if (rooms.length > 0) {
+                    this.setState({
+                        rooms
+                    });
+                }
+
+                if (rooms.length > 0)
+                {
+                    this.state.rooms.map(room => {
+                        if (room.status === 1)
+                        {
+                            this.setState({
+                                rented : [...this.state.rented, room]
+                            });
+                        } 
+                        else 
+                        {
+                            this.setState({
+                                notRented : [...this.state.notRented, room]
+                            });
+                        }
+                    });
+                }
+
+            }
+        }
+
+        this.setState({
+            isLoading: false
+        });
+    }
+
+    renderSelectBlock = () =>{
+
+        if (Array.isArray(this.state.blocks) && this.state.blocks.length > 0) {
+            return this.state.blocks.map(block => {
+                return <React.Fragment key={block.id}>
+                    <option onClick={() => this.onClickBlock(block.id)}>{block.nameBlock}</option>
+                </React.Fragment>;
+            });
+        }
+    }
+
+    onChangeSelected = (e) => {
+        const {value} = e.target;
+
+        if (value) {
+            const block = this.state.blocks.find(block => block.nameBlock === value);
+
+            this.setState({
+                idBlockSelected: block.id,
+                block
+            });
+
+            this.getRoomDashBoard(block.id);
+        }    
     }
 
     validate = async () => {
@@ -40,10 +169,81 @@ class IndexAdmin extends Component {
         }
     }
 
+    renderRoomNotRented = () =>{
+
+        const {notRented = []} = this.state;
+
+        if (Array.isArray(notRented) && notRented.length > 0) {
+            
+            return notRented.map(room => {
+                return <React.Fragment key={room.id}>                   
+                    <Card title= {room.nameRoom}
+                        onClick = {(e) =>this.showDetailRoomDashboard(e, room)}
+                        room = {room}
+                        style={{width: 175, 
+                            height: 150, 
+                            backgroundColor: 'rgb(19, 194, 194)', 
+                            color: '#fff',
+                            cursor: 'pointer',
+                            borderRadius : '5%',
+                            marginRight: '10px',
+                            marginTop: '20px'}}>
+                        <p><i className="fa fa-user" aria-hidden="true" /> {room.maxPeople}</p>
+                        <p><i className="fa fa-usd" aria-hidden="true" /> {room.price}</p>
+                    </Card>
+                </React.Fragment>;
+            });
+        }
+    }
+
+    renderRoomRented = () =>{
+
+        const {rented = []} = this.state;
+
+        if (Array.isArray(rented) && rented.length > 0) {
+            
+            return rented.map(room => {
+                return <React.Fragment key={room.id}>                   
+                    <Card title= {room.nameRoom}
+                        room = {room}
+                        onClick = {(e) =>this.showDetailRoomDashboard(e, room)}
+                        style={{width: 175, 
+                            height: 150, 
+                            backgroundColor: 'rgb(245, 34, 45)', 
+                            color: '#fff',
+                            cursor: 'pointer',
+                            borderRadius : '5%',
+                            marginRight: '10px',
+                            marginTop: '20px'}}>
+                        <p><i className="fa fa-user" aria-hidden="true" /> {room.maxPeople}</p>
+                        <p><i className="fa fa-usd" aria-hidden="true" /> {room.price}</p>
+                    </Card>
+                </React.Fragment>;
+            });
+        }
+    }
+
+    showDetailRoomDashboard = (e , room) =>{
+        this.setState({
+            showDetail : true,
+            roomSelected: room
+        });
+
+        console.log(room);
+    }
+
+    handleCancel = () =>{
+        this.setState({
+            showDetail : false
+        });
+    }
+
     render() {
-       
+        const {roomSelected} = this.state;
+
         return (
             <div>
+                {this.state.isLoading ?  <Spin /> : null} 
                 {/* Page Wrapper */}
                 <div id="wrapper">
                     <SideBar />
@@ -90,83 +290,43 @@ class IndexAdmin extends Component {
                             <div className="container-fluid">
                                 {/* Page Heading */}
                                 <div className="d-sm-flex align-items-center justify-content-between mb-4">
-                                    <h1 className="h3 mb-0 text-gray-800">Dashboard</h1>
+                                    <Container>
+                                        <Row>
+                                            <Col xs="6" sm = "4">
+                                                <FormGroup>
+                                                    <Label for="exampleSelect">Khu trọ: </Label>
+                                                    <Input onChange={this.onChangeSelected} type="select" name="select" id="exampleSelect">
+                                                        {this.renderSelectBlock()}
+                                                    </Input>
+                                                </FormGroup>
+                                            </Col>
+                                            <Col xs="6" sm = "4" >
+                                                <FormGroup>
+                                                    <Label for="exampleSelect">Tìm kiếm theo tên</Label>
+                                                    <Input 
+                                                        onChange={this.onChange} 
+                                                        type="text" name="roomName" id="roomName" 
+                                                        placeholder = "Nhập từ khóa"
+                                                        style={{width: '300px'}} />
+                                                </FormGroup>                                       
+                                            </Col>
+                                            
+                                        </Row>
+                                    </Container>
                                 </div>
                                 {/* Content Row */}
-                                <div className="row">
-                                    {/* Earnings (Monthly) Card Example */}
-                                    <div className="col-xl-3 col-md-6 mb-4">
-                                        <div className="card border-left-primary shadow h-100 py-2">
-                                            <div className="card-body">
-                                                <div className="row no-gutters align-items-center">
-                                                    <div className="col mr-2">
-                                                        <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)</div>
-                                                        <div className="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-                                                    </div>
-                                                    <div className="col-auto">
-                                                        <i className="fas fa-calendar fa-2x text-gray-300" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Earnings (Monthly) Card Example */}
-                                    <div className="col-xl-3 col-md-6 mb-4">
-                                        <div className="card border-left-success shadow h-100 py-2">
-                                            <div className="card-body">
-                                                <div className="row no-gutters align-items-center">
-                                                    <div className="col mr-2">
-                                                        <div className="text-xs font-weight-bold text-success text-uppercase mb-1">Earnings (Annual)</div>
-                                                        <div className="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-                                                    </div>
-                                                    <div className="col-auto">
-                                                        <i className="fas fa-dollar-sign fa-2x text-gray-300" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Earnings (Monthly) Card Example */}
-                                    <div className="col-xl-3 col-md-6 mb-4">
-                                        <div className="card border-left-info shadow h-100 py-2">
-                                            <div className="card-body">
-                                                <div className="row no-gutters align-items-center">
-                                                    <div className="col mr-2">
-                                                        <div className="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks</div>
-                                                        <div className="row no-gutters align-items-center">
-                                                            <div className="col-auto">
-                                                                <div className="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                                            </div>
-                                                            <div className="col">
-                                                                <div className="progress progress-sm mr-2">
-                                                                    <div className="progress-bar bg-info" role="progressbar" style={{width: '50%'}} aria-valuenow={50} aria-valuemin={0} aria-valuemax={100} />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-auto">
-                                                        <i className="fas fa-clipboard-list fa-2x text-gray-300" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Pending Requests Card Example */}
-                                    <div className="col-xl-3 col-md-6 mb-4">
-                                        <div className="card border-left-warning shadow h-100 py-2">
-                                            <div className="card-body">
-                                                <div className="row no-gutters align-items-center">
-                                                    <div className="col mr-2">
-                                                        <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
-                                                        <div className="h5 mb-0 font-weight-bold text-gray-800">18</div>
-                                                    </div>
-                                                    <div className="col-auto">
-                                                        <i className="fas fa-comments fa-2x text-gray-300" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
+                                <div className="row ml-4">
+                                    {this.state.notRented.length > 0 ?  <div className="col-12">Chưa thuê: </div> : null}                                                               
+                                    {this.renderRoomNotRented()} 
+                                    {this.state.rented.length > 0 ?  <div className="col-12 mt-5">Đã thuê: </div> : null}                                       
+                                    {this.renderRoomRented()}
+                                    {this.state.notRented.length === 0 && this.state.rented.length === 0 ?  'Khu trọ chưa có phòng nào !' : null}  
+                                </div>
+
+                                <div className="container-fluid">
+                                    
+                                    {/* <ServiceTable idBlock={this.state.idBlockSelected} block= {this.state.block} /> */}
                                 </div>
                             </div>
                             {/* /.container-fluid */}
@@ -184,24 +344,78 @@ class IndexAdmin extends Component {
                 <a className="scroll-to-top rounded" href="#page-top">
                     <i className="fas fa-angle-up" />
                 </a>
-                {/* Logout Modal */}
-                <div className="modal fade" id="logoutModal" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Bạn chắc chắn muốn đăng xuất ?</h5>
-                                <button className="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            {/* <div className="modal-body">Đăng suất để thoát</div> */}
-                            <div className="modal-footer">
-                                <button className="btn btn-secondary" type="button" data-dismiss="modal">Ở lại</button>
-                                <a className="btn btn-primary" href="/dang-nhap">Đăng xuất</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <LogOutModal />
+                <Modal
+                    visible={this.state.showDetail}
+                    title={roomSelected ? 'Phòng  ' + roomSelected.nameRoom : ''}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
+                    footer={[
+                        <Button key="back" type="primary" onClick={this.handleCancel}>
+                            OK
+                        </Button>
+                    ]}
+                >
+                    <Row>
+                        <Col>
+                            <b>Khu trọ: </b>
+                        </Col>
+                        <Col>
+                            <p>{roomSelected ? roomSelected.nameBlock : ''}</p>
+                        </Col>
+                    </Row>
+                    {/* <Row>
+                        <Col>
+                            <b>Mã phòng: </b>
+                        </Col>
+                        <Col>
+                            <p>{roomSelected ? roomSelected.codeRoom : ''}</p>
+                        </Col>
+                    </Row> */}
+                    <Row>
+                        <Col>
+                            <b>Tầng: </b>
+                        </Col>
+                        <Col>
+                            <p>{roomSelected ? roomSelected.floor : ''}</p>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <b>Số người tối đa: </b>
+                        </Col>
+                        <Col>
+                            <p>{roomSelected ? roomSelected.maxPeople : ''}</p>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col>
+                            <b>Diện tích: </b>
+                        </Col>
+                        <Col>
+                            <p>{roomSelected ? roomSelected.square : ''}</p>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col>
+                            <b>Mô tả: </b>
+                        </Col>
+                        <Col>
+                            <p>{roomSelected ? roomSelected.description : ''}</p>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col>
+                            <b>Ngày thuê: </b>
+                        </Col>
+                        <Col>
+                            <p>{roomSelected && roomSelected.startDate  ? moment(roomSelected.startDate).format('DD-MM-YYYY') : 'Chưa thuê'}</p>
+                        </Col>
+                    </Row>
+                </Modal>
             </div>
         );
     }

@@ -39,13 +39,18 @@ class Index extends Component {
             if (getBlocks.data && getBlocks.data.data) {
                 const {blocks = []} = getBlocks.data.data;
 
-                this.setState({
-                    blocks,
-                    idBlockSelected: +blocks[0].id,
-                    isLoading: false
-                });
+                if (blocks.length > 0) {
+                    this.setState({
+                        blocks,
+                        idBlockSelected: +blocks[0].id,
+                        isLoading: false
+                    });
+                }
             }
         }
+        this.setState({
+            isLoading: false
+        });
     }
 
     onClickBlock = (id) => {
