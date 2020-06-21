@@ -238,6 +238,8 @@ class ServiceTable extends Component {
     }
 
     render() {
+        const {idBlock} = this.props;
+
         return (
             <div style={{position: 'relative'}}>   
                 {this.state.isLoadingForm ?  <Spin /> : null}       
@@ -247,7 +249,12 @@ class ServiceTable extends Component {
                             <h6 className="m-0 font-weight-bold text-primary">QUẢN LÝ DANH SÁCH DỊCH VỤ</h6>                          
                         </div>
                         <div>
-                            <Button outline color="primary" onClick = {this.addServiceModal}>Thêm dịch vụ</Button>{' '}                                 
+                            <Button 
+                                outline color= {idBlock === null ? 'secondary' : 'primary' }
+                                disabled={idBlock === null ? true : false}
+                                title = {idBlock === null ? 'Phải có ít nhất 1 khu trọ để thực hiện thêm dịch vụ' : ''}
+                                onClick = {this.addServiceModal}
+                            >Thêm dịch vụ</Button>{' '}                                 
                         </div>
                                    
                     </div>
