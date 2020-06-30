@@ -170,7 +170,6 @@ class ServiceTable extends Component {
             }
         });
 
-        console.log(this.state.services);
         return <Checkbox.Group style={{width: '100%'}}>
             <Row>
                 {

@@ -45,6 +45,11 @@ class SideBar extends Component {
                         <i className="fas fa-fw fa-chart-area" />
                         <span>Hợp đồng</span></Link>
                 </li>
+                <li className="nav-item">
+                    <Link className="nav-link" to="/admin/hoa-don">
+                        <i className="fas fa-fw fa-chart-area" />
+                        <span>Hóa đơn</span></Link>
+                </li>
             </ul>
         );
     }

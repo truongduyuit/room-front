@@ -9,6 +9,7 @@ import Service from './components/admin/service/Index';
 import Customer from './components/admin/customer/Index';
 import Contract from './components/admin/contract/Index';
 import Home from './components/web/Index';
+import Bill from './components/admin/bill/Index';
 
 class Routers extends Component {
     render() {
@@ -33,6 +34,7 @@ class Routers extends Component {
 
                 <Route exact path="/admin/hop-dong"> <Contract /> </Route>
                 
+                <Route exact path="/admin/hoa-don"> <Bill /> </Route>
             </Switch>
         );
     }
