@@ -1,10 +1,23 @@
 import React, {Component} from 'react';
-import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
-import {Form, FormGroup, Label, Input} from 'reactstrap';
+import {Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import axios from 'axios';
 import {toast, ToastContainer} from 'react-toastify';
 import Spin from '../../admin/Spin';
-import {Tag} from 'antd'; 
+import {Form, Input, Button, Tag} from 'antd'; 
+
+const layout = {
+    labelCol: {
+        span: 24
+    },
+    wrapperCol: {
+        span: 24
+    }
+};
+
+const formItemLayout = {
+    labelCol: {span: 6},
+    wrapperCol: {span: 18}
+};
 
 export default class BlockRow extends Component {
     state = {
@@ -28,8 +41,8 @@ export default class BlockRow extends Component {
         });
     }
 
-    updateData= async () =>{
-        this.setState({
+    onFinish = async (values) => {
+                this.setState({
             isLoading: true
         });
 
@@ -39,9 +52,9 @@ export default class BlockRow extends Component {
             method: 'PUT',
             data: {
                 id: this.props.block.id,
-                nameBlock : this.state.nameBlock,
-                address : this.state.address,
-                description : this.state.description,
+                nameBlock : values.nameBlock,
+                address : values.address,
+                description : values.description,
                 idOwner : this.props.block.idOwner
             }
         });
@@ -105,9 +118,6 @@ export default class BlockRow extends Component {
         } 
     }
 
-    onEditing = () =>{
-        this.updateData();      
-    }
     
     onClickEdit = () => {
         this.setState({
@@ -141,29 +151,74 @@ export default class BlockRow extends Component {
                         </button>
                     </td>
                 </tr>
+            
                 <Modal isOpen={this.state.isOpenModal} toggle={this.toggle}>
-                    {this.state.isLoading ?  <Spin /> : null}  
-                    <ModalHeader toggle={this.toggle}>CHỈNH SỬA THÔNG TIN KHU TRỌ</ModalHeader>
+                    {this.state.isLoading ?  <Spin /> : null}       
+                    <ModalHeader toggle={this.toggle}>CẬP NHẬT THÔNG TIN KHU TRỌ</ModalHeader>
                     <ModalBody>
-                        <Form>
-                            <FormGroup>
-                                <Label for="exampleNameBlock">Tên khu trọ</Label>
-                                <Input type="email" name="nameBlock" id="exampleNameBlock" onChange={(e) => this.onChange(e)} value={this.state.nameBlock} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="exampleAddress">Địa chỉ</Label>
-                                <Input type="email" name="address" id="exampleAddress" onChange={(e) => this.onChange(e)} value={this.state.address} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="exampleDescription">Mô tả</Label>
-                                <Input type="email" name="description" id="exampleDescription" onChange={(e) => this.onChange(e)} value={this.state.description} />
-                            </FormGroup>
+                        <Form 
+                            {...layout} 
+                            initialValues= {{
+                                "nameBlock": this.state.nameBlock,
+                                "address": this.state.address,
+                                "description": this.state.description,
+
+                            }}
+                            ref={this.formRef} onFinish={this.onFinish}>
+                            <Form.Item
+                                {...formItemLayout}
+                                name="nameBlock"
+                                label="Tên khu trọ:"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Hãy nhập tên khu trọ'
+                                    }
+                                ]}
+                            >
+                                <Input placeholder="Nhập tên khu trọ" />
+                            </Form.Item>   
+
+                            <Form.Item
+                                {...formItemLayout}
+                                name="address"
+                                label="Địa chỉ:"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Hãy nhập địa chỉ'
+                                    }
+                                ]}
+                            >
+                                <Input placeholder="Nhập địa chỉ" />
+                            </Form.Item>    
+
+                            <Form.Item
+                                {...formItemLayout}
+                                name="description"
+                                label="Mô tả:"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Hãy nhập mô tả'
+                                    }
+                                ]}
+                            >
+                                <Input placeholder="Nhập mô tả" />
+                            </Form.Item>  
+                            
+                                                
+
+                            <Form.Item
+                                wrapperCol={{
+                                    md: {span: 8, offset: 16}
+                                }}
+                            >
+                                <Button htmlType='submit' type='primary' >Cập nhật</Button>{' '}
+                                <Button  onClick={this.toggle}>Hủy</Button>
+                            </Form.Item>
                         </Form>
                     </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" onClick={this.onEditing}>Chỉnh sửa</Button>{' '}
-                        <Button color="secondary" onClick={this.toggle}>Hủy</Button>
-                    </ModalFooter>
                 </Modal>
                 <Modal isOpen={this.state.isOpenDeleteModal} toggle={this.toggle}>
                     {this.state.isLoading ?  <Spin /> : null}  
@@ -172,8 +227,8 @@ export default class BlockRow extends Component {
                         Chắc chắn muốn xóa khu trọ ?
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.onDeleting}>Xóa</Button>{' '}
-                        <Button color="secondary" onClick={this.toggleDelete}>Hủy</Button>
+                        <Button type="primary" onClick={this.onDeleting}>Xóa</Button>{' '}
+                        <Button type="secondary" onClick={this.toggleDelete}>Hủy</Button>
                     </ModalFooter>
                 </Modal>
                 <ToastContainer />

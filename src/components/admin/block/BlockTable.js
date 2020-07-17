@@ -3,11 +3,25 @@ import axios from 'axios';
 import BlockRow from './BlockRow';
 import {connect} from 'react-redux';
 import {GET_BLOCKS} from '../../../actions//BlockActions';
-import {Button} from 'reactstrap';
 import {Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
-import {Form, FormGroup, Label, Input} from 'reactstrap';
 import {toast, ToastContainer} from 'react-toastify';
 import Spin from '../../admin/Spin';
+
+import {Form, Input, Button} from 'antd';
+
+const layout = {
+    labelCol: {
+        span: 24
+    },
+    wrapperCol: {
+        span: 24
+    }
+};
+
+const formItemLayout = {
+    labelCol: {span: 6},
+    wrapperCol: {span: 18}
+};
 
 class BlockTable extends Component {
 
@@ -56,6 +70,45 @@ class BlockTable extends Component {
         this.props.GET_BLOCKS({
             blocks: blocks.data.data.blocks
         });
+
+    }
+
+    onFinish = async (values) => {
+        this.setState({
+            isLoading: true
+        });
+
+        let user = JSON.parse(localStorage.getItem('user'));
+        let token = localStorage.getItem('token');
+
+        const result = await axios({
+            url: `http://localhost:8001/block/create?token=${token || ''}`,
+            method: 'POST',
+            data: {
+                nameBlock : values.nameBlock,
+                address : values.address,
+                description : values.description,
+                idOwner : user.id
+            }
+        });
+
+        this.setState({
+            isLoading: false
+        });
+        if (result) {
+            if (result.data && result.data.data) {
+                this.getBlocks();
+                toast.success('Thêm khu trọ thành công !');
+
+                this.setState({
+                    isOpenModal: !this.state.isOpenModal
+                });
+                
+            } else {
+
+                toast.error('Thêm khu trọ thất bại !');
+            }
+        } 
 
     }
 
@@ -161,25 +214,63 @@ class BlockTable extends Component {
                     {this.state.isLoading ?  <Spin /> : null}       
                     <ModalHeader toggle={this.toggle}>THÊM KHU TRỌ</ModalHeader>
                     <ModalBody>
-                        <Form>
-                            <FormGroup>
-                                <Label for="exampleNameBlock">Tên khu trọ</Label>
-                                <Input type="email" name="nameBlock" id="exampleNameBlock" onChange={(e) => this.onChange(e)} value={this.state.nameBlock} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="exampleAddress">Địa chỉ</Label>
-                                <Input type="email" name="address" id="exampleAddress" onChange={(e) => this.onChange(e)} value={this.state.address} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="exampleDescription">Mô tả</Label>
-                                <Input type="email" name="description" id="exampleDescription" onChange={(e) => this.onChange(e)} value={this.state.description} />
-                            </FormGroup>
+                        <Form 
+                            {...layout} 
+                            ref={this.formRef} onFinish={this.onFinish}>
+                            <Form.Item
+                                {...formItemLayout}
+                                name="nameBlock"
+                                label="Tên khu trọ:"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Hãy nhập tên khu trọ'
+                                    }
+                                ]}
+                            >
+                                <Input placeholder="Nhập tên khu trọ" />
+                            </Form.Item>   
+
+                            <Form.Item
+                                {...formItemLayout}
+                                name="address"
+                                label="Địa chỉ:"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Hãy nhập địa chỉ'
+                                    }
+                                ]}
+                            >
+                                <Input placeholder="Nhập địa chỉ" />
+                            </Form.Item>    
+
+                            <Form.Item
+                                {...formItemLayout}
+                                name="description"
+                                label="Mô tả:"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Hãy nhập mô tả'
+                                    }
+                                ]}
+                            >
+                                <Input placeholder="Nhập mô tả" />
+                            </Form.Item>  
+                            
+                                                
+
+                            <Form.Item
+                                wrapperCol={{
+                                    md: {span: 8, offset: 16}
+                                }}
+                            >
+                                <Button htmlType='submit' type='primary' >Thêm</Button>{' '}
+                                <Button  onClick={this.toggle}>Hủy</Button>
+                            </Form.Item>
                         </Form>
                     </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" onClick={this.onAdding}>Thêm</Button>{' '}
-                        <Button color="secondary" onClick={this.toggle}>Hủy</Button>
-                    </ModalFooter>
                 </Modal>
                 <ToastContainer />
             </div>

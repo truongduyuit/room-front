@@ -120,6 +120,14 @@ class IndexAdmin extends Component {
         });
     }
 
+    onClickBlock = (id) => {
+        if (id) {
+            this.setState({
+                idBlockSelected: +id
+            });
+        }
+    }
+
     renderSelectBlock = () =>{
 
         if (Array.isArray(this.state.blocks) && this.state.blocks.length > 0) {

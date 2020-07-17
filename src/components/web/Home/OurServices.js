@@ -8,8 +8,8 @@ export default class OurServices extends Component {
         return (
             <div className= "our-services" id="our-services">
                 <div className="info-services">
-                    <h1>Our Services</h1>
-                    <h3>Stop wasting time and money designing and managing a website that doesn’t get results. Happiness guaranteed!</h3>
+                    <h1>Dịch Vụ</h1>
+                    <h3>Công việc quản lý nhà trọ, căn hộ chiếm tỷ lệ không hề nhỏ trong hiệu quả của các chuỗi nhà trọ, căn hộ. Nhưng để quản lý hiệu quả không phải chuyện đơn giản.</h3>
                 </div>
 
                 <div className="services">
