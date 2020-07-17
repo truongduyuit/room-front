@@ -154,7 +154,7 @@ export default class BlockRow extends Component {
             
                 <Modal isOpen={this.state.isOpenModal} toggle={this.toggle}>
                     {this.state.isLoading ?  <Spin /> : null}       
-                    <ModalHeader toggle={this.toggle}>CHỈNH SỬA THÔNG TIN KHU TRỌ</ModalHeader>
+                    <ModalHeader toggle={this.toggle}>CẬP NHẬT THÔNG TIN KHU TRỌ</ModalHeader>
                     <ModalBody>
                         <Form 
                             {...layout} 
@@ -214,7 +214,7 @@ export default class BlockRow extends Component {
                                     md: {span: 8, offset: 16}
                                 }}
                             >
-                                <Button htmlType='submit' type='primary' >Thêm</Button>{' '}
+                                <Button htmlType='submit' type='primary' >Cập nhật</Button>{' '}
                                 <Button  onClick={this.toggle}>Hủy</Button>
                             </Form.Item>
                         </Form>

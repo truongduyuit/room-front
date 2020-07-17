@@ -2,8 +2,8 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 import {connect} from 'react-redux';
-import {Button} from 'antd';
-import {Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input} from 'reactstrap';
+import {Modal, ModalHeader, ModalBody} from 'reactstrap';
+import {Form, Input , Button, InputNumber } from 'antd';
 import {toast, ToastContainer} from 'react-toastify';
 
 // Actions
@@ -13,19 +13,29 @@ import {GET_ROOMS} from '../../../actions/RoomAction';
 import Spin from '../../admin/Spin';
 import RoomRow from './RoomRow';
 
+const {TextArea} = Input;
+
+const layout = {
+    labelCol: {
+        span: 24
+    },
+    wrapperCol: {
+        span: 24
+    }
+};
+
+const formItemLayout = {
+    labelCol: {span: 6},
+    wrapperCol: {span: 18}
+};
+
 class RoomTable extends Component {
 
     state = {
         rooms : [],
         isOpenModal: false,
         isLoading: false,
-        nameRoom: '',
-        maxPeople: null,
-        floor : null,
-        square: null,
-        price: null,
-        description: '',
-        status: ''
+        description: ''
     }
 
     toggle = () => {
@@ -35,6 +45,12 @@ class RoomTable extends Component {
     }
 
     onChange(e) {
+        this.setState({
+            [e.target.name] : e.target.value
+        });
+    }
+
+    onChangeArea = (e) => {
         this.setState({
             [e.target.name] : e.target.value
         });
@@ -70,8 +86,8 @@ class RoomTable extends Component {
         this.setState({isLoading: false});
     }
 
-    onAdding = async () =>{
-        this.setState({
+    onFinish = async (values) => {
+                this.setState({
             isLoading: true
         });
 
@@ -81,12 +97,12 @@ class RoomTable extends Component {
             url: `http://localhost:8001/room/create?token=${token || ''}`,
             method: 'POST',
             data: {
-                nameRoom: this.state.nameRoom,
-                maxPeople: +this.state.maxPeople,
-                floor: +this.state.floor,
-                square: +this.state.square,
-                price: +this.state.price,
-                description: this.state.description,
+                nameRoom: values.nameRoom,
+                maxPeople: +values.maxPeople,
+                floor: +values.floor,
+                square: +values.square,
+                price: +values.price,
+                description: values.description,
                 idBlock: this.props.idBlock,
                 status: 0
             }
@@ -107,20 +123,14 @@ class RoomTable extends Component {
 
                 toast.error('Thêm phòng thất bại !');
             }
-        } 
+        }
     }
 
     addBlockModal = () =>{
         this.setState({
             isOpenModal: true,
             isLoading: false,
-            nameRoom: '',
-            maxPeople: null,
-            floor : null,
-            square: null,
-            price: null,
             description: '',
-            status: ''
         });
     }
 
@@ -196,39 +206,102 @@ class RoomTable extends Component {
                         </div>
                     </div>
                 </div>       
+
                 <Modal isOpen={this.state.isOpenModal} toggle={this.toggle}>
                     {this.state.isLoading ?  <Spin /> : null}       
                     <ModalHeader toggle={this.toggle}>THÊM PHÒNG</ModalHeader>
                     <ModalBody>
-                        <Form>
-                            <FormGroup>
-                                <Label for="nameRoom">Tên phòng (*)</Label>
-                                <Input type="text" name="nameRoom" id="nameRoom" onChange={(e) => this.onChange(e)} value={this.state.nameRoom} />
-                                <Label for="floor">Tầng (*) </Label>
-                                <Input type="number" name="floor" id="floor" onChange={(e) => this.onChange(e)} value={this.state.floor} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="maxPeople">Số người tối da (*) </Label>
-                                <Input type="number" name="maxPeople" id="maxPeople" onChange={(e) => this.onChange(e)} value={this.state.maxPeople} />
-                                <Label for="square">Diện tích (*) </Label>
-                                <Input type="number" name="square" id="square" onChange={(e) => this.onChange(e)} value={this.state.square} />
-                                <Label for="price">Giá (*)</Label>
-                                <Input type="number" name="price" id="price" onChange={(e) => this.onChange(e)} value={this.state.price} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="description">Mô tả</Label>
-                                <Input type="textarea" name="description" id="description" onChange={(e) => this.onChange(e)} value={this.state.description} />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="exampleFile">File</Label>
-                                <Input type="file" name="file" id="exampleFile" />
-                            </FormGroup>
+                        <Form 
+                            {...layout} 
+                            ref={this.formRef} onFinish={this.onFinish}>
+                            <Form.Item
+                                {...formItemLayout}
+                                name="nameRoom"
+                                label="Tên phòng:"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Hãy nhập tên phòng'
+                                    }
+                                ]}
+                            >
+                                <Input placeholder="Nhập tên phòng" />
+                            </Form.Item>
+
+                            <Form.Item
+                                {...formItemLayout}
+                                name="floor"
+                                label="Tầng:"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Hãy nhập tầng'
+                                    }
+                                ]}
+                            >
+                                <InputNumber style= {{width : "350px"}} min={1} placeholder="Nhập tên tầng" />
+                            </Form.Item>
+
+                            <Form.Item
+                                {...formItemLayout}
+                                name="maxPeople"
+                                label="Số người tối đa:"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Hãy nhập số người tối đa'
+                                    }
+                                ]}
+                            >
+                                <InputNumber style= {{width : "350px"}} min={1} placeholder="Nhập số người tối đa" />
+                            </Form.Item>
+
+                            <Form.Item
+                                {...formItemLayout}
+                                name="square"
+                                label="Diện tích:"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Hãy nhập diện tích'
+                                    }
+                                ]}
+                            >
+                                <InputNumber style= {{width : "350px"}} min={1} placeholder="Nhập diện tích" />
+                            </Form.Item>
+
+                            <Form.Item
+                                {...formItemLayout}
+                                name="price"
+                                label="Giá phòng:"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Hãy nhập giá phòng'
+                                    }
+                                ]}
+                            >
+                                <InputNumber style= {{width : "350px"}} min={1} placeholder="Nhập giá phòng" />
+                            </Form.Item>
+
+                            <Form.Item 
+                                {...formItemLayout}
+                                name = 'description'
+                                label="Mô tả"
+                            >
+                                <TextArea placeholder="Nhập mô tả" allowClear onChange={this.onChangeArea} />
+                            </Form.Item>                           
+
+                            <Form.Item
+                                wrapperCol={{
+                                    md: {span: 8, offset: 16}
+                                }}
+                            >
+                                <Button htmlType='submit' type='primary' >Thêm</Button>{' '}
+                                <Button  onClick={this.toggle}>Hủy</Button>
+                            </Form.Item>
                         </Form>
                     </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" onClick={this.onAdding}>Thêm</Button>{' '}
-                        <Button color="secondary" onClick={this.toggle}>Hủy</Button>
-                    </ModalFooter>
                 </Modal>
                 <ToastContainer />
             </div>
