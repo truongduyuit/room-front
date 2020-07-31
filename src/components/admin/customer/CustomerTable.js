@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import {Modal, ModalHeader, ModalBody} from 'reactstrap';
 import {toast, ToastContainer} from 'react-toastify';
-import {Form, Input, Radio , Button, Checkbox, Row, Col, Divider, DatePicker, Upload, message} from 'antd';
+import {Form, Input, Radio , Button, Checkbox, Row, Col, Divider, DatePicker, Upload, message, Pagination } from 'antd';
 import {LoadingOutlined, PlusOutlined} from '@ant-design/icons';
 import moment from 'moment';
 
@@ -69,13 +69,26 @@ class CustomerTable extends Component {
         checked: false,
         disabled: false,
         note: '',
-        avatar: ''
+        avatar: '',
+
+        page: 1,
+        totalRows: null,
+        limit: 5
     }
 
     callBackCustomerRow = value =>{
         if (value) {
             this.getCustomers();
         }
+    }
+
+    onChangePageLimit= async (pageNumber) => {
+        console.log('Page: ', pageNumber);
+        await this.setState({
+            page: pageNumber
+        })
+
+        this.getCustomers();
     }
 
     renderCustomer = () =>{
@@ -113,18 +126,20 @@ class CustomerTable extends Component {
         let user = JSON.parse(localStorage.getItem('user'));
         let token = localStorage.getItem('token');
         const getCustomers = await axios({
-            url: `http://localhost:8001/customer/get-customers?token=${token || ''}&userId=${user.id || ''}`,
+            url: `http://localhost:8001/customer/get-customers?token=${token || ''}&userId=${user.id || ''}&page=${this.state.page}&limit=${this.state.limit}`,
             method: 'GET'
         });
 
         if (getCustomers) {
             if (getCustomers.data && getCustomers.data.data) {
-                const {customers = []} = getCustomers.data.data;
+                const {customers = [], page, totalRows} = getCustomers.data.data;
 
                 this.setState({
-                    customers
+                    customers,
+                    page,
+                    totalRows
                 });
-            } 
+            }
         }
 
         this.setState({isLoadingForm: false});
@@ -247,9 +262,7 @@ class CustomerTable extends Component {
                                 onClick = {this.openAddCustomerModal}
                             >Thêm khách hàng</Button>{' '}                                 
                         </div>
-                                   
                     </div>
-                    
                     <div className="card-body">
                         <div className="table-responsive">
                             <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
@@ -266,6 +279,10 @@ class CustomerTable extends Component {
                                 <tbody>
                                     {this.renderCustomer()}                      
                                 </tbody>
+                                <tfoot>
+                                    <Pagination showQuickJumper defaultCurrent={this.state.page} total={Math.ceil(this.state.totalRows / this.state.limit)*10} onChange={this.onChangePageLimit} />
+                                </tfoot>
+                                <br/>
                             </table>
                         </div>
                     </div>

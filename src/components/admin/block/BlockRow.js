@@ -222,7 +222,7 @@ export default class BlockRow extends Component {
                 </Modal>
                 <Modal isOpen={this.state.isOpenDeleteModal} toggle={this.toggle}>
                     {this.state.isLoading ?  <Spin /> : null}  
-                    <ModalHeader toggle={this.toggle}>THÔNG BÁO</ModalHeader>
+                    <ModalHeader toggle={this.toggleDelete}>THÔNG BÁO</ModalHeader>
                     <ModalBody>
                         Chắc chắn muốn xóa khu trọ ?
                     </ModalBody>

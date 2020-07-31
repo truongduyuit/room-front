@@ -98,7 +98,7 @@ export default class Index extends Component {
         let user = JSON.parse(localStorage.getItem('user'));
         let token = localStorage.getItem('token');
         const getCustomers = await axios({
-            url: `http://localhost:8001/customer/get-customers?token=${token || ''}&userId=${user.id || ''}`,
+            url: `http://localhost:8001/customer/get-customers?token=${token || ''}&userId=${user.id || ''}&page=${1}&limit=${1000}`,
             method: 'GET'
         });
 
