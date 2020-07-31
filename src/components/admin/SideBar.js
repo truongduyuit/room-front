@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import styled from 'styled-components';
+
+const HoverText = styled.span`
+	:hover {
+		color: #007bff;
+		cursor: pointer;
+	}
+`
 
 class SideBar extends Component {
     render() {
@@ -26,9 +34,10 @@ class SideBar extends Component {
                         <span>Khu trọ</span></Link>
                 </li>
                 <li className="nav-item">
-                    <Link className="nav-link" to="/admin/phong">
+                    <Link className="nav-link" to="/admin/phong" style={{':hover': '{color: #fff}'}}>
                         <i className="fas fa-fw fa-chart-area" />
-                        <span>Phòng</span></Link>
+                        <span>Phòng</span>
+                        </Link>
                 </li>
                 <li className="nav-item">
                     <Link className="nav-link" to="/admin/dich-vu">

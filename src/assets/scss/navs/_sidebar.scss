@@ -15,6 +15,7 @@
         font-size: 0.65rem;
         display: block;
       }
+
     }
     &.active {
       .nav-link {
@@ -172,6 +173,7 @@
           font-size: 0.85rem;
           display: inline;
         }
+
         // Accordion Arrow Icon
         &[data-toggle="collapse"] {
           &::after {
@@ -335,7 +337,7 @@
       &:active,
       &:focus,
       &:hover {
-        color: $white;
+        color: $black;
         i {
           color: $white;
         }

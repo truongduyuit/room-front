@@ -271,3 +271,7 @@ ul li.activeWeb a{
 	padding-left: 0px !important;
 	padding-right: 0px !important;
 } */
+
+li.nav-item :hover {
+	color: #007bff !important;
+}

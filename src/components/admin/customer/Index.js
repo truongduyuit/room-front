@@ -58,18 +58,18 @@ export default class Index extends Component {
         });
     }
 
-    onChangeSelected = (e) => {
-        const {value} = e.target;
+    // onChangeSelected = (e) => {
+    //     const {value} = e.target;
 
-        if (value) {
-            const block = this.state.blocks.find(block => block.nameBlock === value);
+    //     if (value) {
+    //         const block = this.state.blocks.find(block => block.nameBlock === value);
 
-            this.setState({
-                idBlockSelected: +block.id,
-                block
-            });
-        }
-    }
+    //         this.setState({
+    //             idBlockSelected: +block.id,
+    //             block
+    //         });
+    //     }
+    // }
 
     renderSelectBlock = () =>{
 
@@ -124,7 +124,7 @@ export default class Index extends Component {
                         
                             {/* Begin Page Content */}
                             <div className="container-fluid">
-                                <Container>
+                                {/* <Container>
                                     <Row>
                                         <Col />
                                         <Col xs="6" sm = "4">
@@ -136,7 +136,7 @@ export default class Index extends Component {
                                             </FormGroup>
                                         </Col>
                                     </Row>
-                                </Container>
+                                </Container> */}
                                 <CustomerTable idBlock={this.state.idBlockSelected} block= {this.state.block} />
                             </div>
                             {/* /.container-fluid */}

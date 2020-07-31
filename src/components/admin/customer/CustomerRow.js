@@ -152,7 +152,7 @@ export default class CustomerRow extends Component {
                 <tr>
                     <td>{customer.fullName}</td>
                     <td>{customer.phoneNumber}</td>
-                    <td>{customer.rooms && customer.rooms.length == 0 ? <Tag color="green">Chưa thuê</Tag> : <Tag color="orange">Đã thuê</Tag>}</td>
+                    <td>{!customer.rooms || customer.rooms.length == 0 ? <Tag color="green">Chưa thuê</Tag> : <Tag color="orange">Đã thuê</Tag>}</td>
                     <td>{customer.rooms ? customer.rooms[0].roomName : ''}</td>
                     <td>
                         <button onClick={this.onClickEdit} className="btn btn-warning btn-circle mr-3" title="Chỉnh sửa">
