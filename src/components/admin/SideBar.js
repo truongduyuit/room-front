@@ -7,9 +7,47 @@ const HoverText = styled.span`
 		color: #007bff;
 		cursor: pointer;
 	}
-`
+`;
+
+const listMenu = [
+    {key: 'bangdieukhien', label: 'Bảng điều khiển', link: '/admin'},
+    {key: 'khutro', label: 'Khu trọ', link: '/admin/khu-tro'},
+    {key: 'phong', label: 'Phòng', link: '/admin/phong'},
+    {key: 'khachhang', label: 'Khách hàng', link: '/admin/khach-hang'},
+    {key: 'dichvu', label: 'Dịch vụ', link: '/admin/dich-vu'},
+    {key: 'hopdong', label: 'Hợp đồng', link: '/admin/hop-dong'},
+    {key: 'hoadon', label: 'Hóa đơn', link: '/admin/hoa-don'}
+];
 
 class SideBar extends Component {
+    
+    state = {
+        idActive: 'bangdieukhien'
+    }
+
+    componentDidMount() {
+        console.log('didMount');
+    }
+
+    onClickTab = (key) => {
+        this.setState({
+            idActive: key
+        });
+    }
+
+    showRenderMenu = () => {
+        if (listMenu && listMenu.length > 0) {
+            return listMenu.map(item => (
+                <li key={item.key} className={`nav-item ${item.key === this.state.idActive && 'active'}`} id={item.key} onClick={() => this.onClickTab(item.key)}>
+                    <Link className="nav-link" to={item.link}>
+                        <i className="fas fa-fw fa-tachometer-alt" />
+                        <span>{item.label}</span>
+                    </Link>
+                </li>
+            ));
+        }
+    }
+
     render() {
         return (
             <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -20,45 +58,7 @@ class SideBar extends Component {
                     <div className="sidebar-brand-text mx-3">H.D.V Smart <sup>motel</sup></div>
                 </Link>
                 <hr className="sidebar-divider my-0" />
-                {/* Nav Item - Dashboard */}
-                <li className="nav-item active">
-                    <Link className="nav-link" to="/admin">
-                        <i className="fas fa-fw fa-tachometer-alt" />
-                        <span>Dashboard</span></Link>
-                </li>
-                {/* Nav Item - Pages Collapse Menu */}
-
-                <li className="nav-item">
-                    <Link className="nav-link" to="/admin/khu-tro">
-                        <i className="fas fa-fw fa-chart-area" />
-                        <span>Khu trọ</span></Link>
-                </li>
-                <li className="nav-item">
-                    <Link className="nav-link" to="/admin/phong" style={{':hover': '{color: #fff}'}}>
-                        <i className="fas fa-fw fa-chart-area" />
-                        <span>Phòng</span>
-                        </Link>
-                </li>
-                <li className="nav-item">
-                    <Link className="nav-link" to="/admin/dich-vu">
-                        <i className="fas fa-fw fa-chart-area" />
-                        <span>Dịch vụ</span></Link>
-                </li>
-                <li className="nav-item">
-                    <Link className="nav-link" to="/admin/khach-hang">
-                        <i className="fas fa-fw fa-chart-area" />
-                        <span>Khách hàng</span></Link>
-                </li>
-                <li className="nav-item">
-                    <Link className="nav-link" to="/admin/hop-dong">
-                        <i className="fas fa-fw fa-chart-area" />
-                        <span>Hợp đồng</span></Link>
-                </li>
-                <li className="nav-item">
-                    <Link className="nav-link" to="/admin/hoa-don">
-                        <i className="fas fa-fw fa-chart-area" />
-                        <span>Hóa đơn</span></Link>
-                </li>
+                {this.showRenderMenu()}
             </ul>
         );
     }

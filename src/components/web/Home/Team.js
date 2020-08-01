@@ -11,7 +11,7 @@ export default class Team extends Component {
         return (
             <div className= "our-team" id="our-team">
                 <div className="info-team">
-                    <h1>Đội Ngủ</h1>
+                    <h1>Đội Ngũ Phát Triển</h1>
                     <h5>Chúng tôi luôn cố gắng tạo ra môi trường làm việc chuyên nghiệp, sáng tạo và kỷ luật cao. Đội ngũ kỹ sư trẻ giàu nhiệt huyết và các nhân viên tư vấn khách hàng luôn sẵn sàng hỗ trợ bạn suốt 24/7, phần mềm quản lý nhà trọ luôn được phát triển hàng ngày.
                     </h5>
                 </div>
