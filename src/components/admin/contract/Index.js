@@ -107,8 +107,7 @@ export default class Index extends Component {
                 const {customers = []} = getCustomers.data.data;
 
                 this.setState({
-                    customers
-                    
+                    customers                    
                 });
             } 
         }

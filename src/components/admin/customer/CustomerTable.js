@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import {Modal, ModalHeader, ModalBody} from 'reactstrap';
 import {toast, ToastContainer} from 'react-toastify';
-import {Form, Input, Radio , Button, Checkbox, Row, Col, Divider, DatePicker, Upload, message, Pagination } from 'antd';
+import {Form, Input, Radio , Button, Checkbox, Row, Col, Divider, DatePicker, Upload, message, Pagination} from 'antd';
 import {LoadingOutlined, PlusOutlined} from '@ant-design/icons';
 import moment from 'moment';
 
@@ -86,7 +86,7 @@ class CustomerTable extends Component {
         console.log('Page: ', pageNumber);
         await this.setState({
             page: pageNumber
-        })
+        });
 
         this.getCustomers();
     }
@@ -255,6 +255,9 @@ class CustomerTable extends Component {
                             <h6 className="m-0 font-weight-bold text-primary">QUẢN LÝ KHÁCH HÀNG</h6>                          
                         </div>
                         <div>
+                            <Pagination showQuickJumper defaultCurrent={this.state.page} total={Math.ceil(this.state.totalRows / this.state.limit) * 10} onChange={this.onChangePageLimit} />
+                        </div>
+                        <div>
                             <Button 
                                 outline color= {idBlock === null ? 'secondary' : 'primary' }
                                 disabled={idBlock === null ? true : false}
@@ -279,10 +282,10 @@ class CustomerTable extends Component {
                                 <tbody>
                                     {this.renderCustomer()}                      
                                 </tbody>
-                                <tfoot>
+                                {/* <tfoot>
                                     <Pagination showQuickJumper defaultCurrent={this.state.page} total={Math.ceil(this.state.totalRows / this.state.limit)*10} onChange={this.onChangePageLimit} />
                                 </tfoot>
-                                <br/>
+                                <br/> */}
                             </table>
                         </div>
                     </div>
