@@ -241,8 +241,6 @@ class IndexAdmin extends Component {
             showDetail : true,
             roomSelected: room
         });
-
-        console.log(room);
     }
 
     handleCancel = () =>{
@@ -412,7 +410,7 @@ class IndexAdmin extends Component {
                             <b>Diện tích: </b>
                         </Col>
                         <Col>
-                            <p>{roomSelected ? roomSelected.square : ''}</p>
+                            <p>{roomSelected ? roomSelected.square : ''} / m2</p>
                         </Col>
                     </Row>
 
