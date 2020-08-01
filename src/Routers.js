@@ -1,5 +1,8 @@
+// Libraries
 import React, {Component} from 'react';
 import {Switch, Route} from 'react-router-dom';
+
+// Components
 import Login from './components/admin/Login';
 import Register from './components/admin/Register';
 import IndexAdmin from './components/admin/IndexAdmin';
@@ -8,6 +11,7 @@ import Room from './components/admin/room/index';
 import Service from './components/admin/service/Index';
 import Customer from './components/admin/customer/Index';
 import Contract from './components/admin/contract/Index';
+import Admin from './components/admin/index';
 import Home from './components/web/Index';
 import Bill from './components/admin/bill/Index';
 
@@ -22,19 +26,10 @@ class Routers extends Component {
 
                 <Route exact path="/dang-ky">  <Register /> </Route>
                    
-                <Route exact path="/admin"> <IndexAdmin /> </Route>
+                {/* <Route exact path="/admin"> <IndexAdmin /> </Route> */}
+
+                <Route path="/admin"> <Admin /> </Route>
                 
-                <Route exact path="/admin/khu-tro"> <Block /> </Route> 
-
-                <Route exact path="/admin/phong"> <Room /> </Route>
-
-                <Route exact path="/admin/dich-vu"> <Service /> </Route>
-
-                <Route exact path="/admin/khach-hang"> <Customer /> </Route>
-
-                <Route exact path="/admin/hop-dong"> <Contract /> </Route>
-                
-                <Route exact path="/admin/hoa-don"> <Bill /> </Route>
             </Switch>
         );
     }
