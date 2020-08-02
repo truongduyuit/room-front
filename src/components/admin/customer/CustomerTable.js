@@ -403,7 +403,7 @@ class CustomerTable extends Component {
                                             name = 'note'
                                             label="Ghi chú"
                                         >
-                                            <TextArea placeholder="textarea with clear icon" allowClear onChange={this.onChange} />
+                                            <TextArea placeholder="Nhập ghi chú" allowClear onChange={this.onChange} />
                                         </Form.Item>
 
                                         {/* <Form.Item 
